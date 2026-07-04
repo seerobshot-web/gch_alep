@@ -1,15 +1,14 @@
 import Link from 'next/link';
 
+// Top-level nav mirrors the approved wireframes (Features · Pricing ·
+// Migration · Support · Blog); product-line pages hang off /features and
+// the footer.
 const LINKS = [
-  { href: '/hosting', label: 'Web Hosting' },
-  { href: '/vps', label: 'VPS' },
-  { href: '/domains', label: 'Domains' },
-  { href: '/ai-tools', label: 'AI Tools' },
-  { href: '/vpn', label: 'VPN' },
-  { href: '/saas', label: 'SaaS' },
+  { href: '/features', label: 'Features' },
   { href: '/pricing', label: 'Pricing' },
-  { href: '/migration', label: 'Free Migration' },
-  { href: '/about', label: 'About' }
+  { href: '/migration', label: 'Migration' },
+  { href: '/support', label: 'Support' },
+  { href: '/blog', label: 'Blog' }
 ];
 
 export function Nav() {
@@ -26,12 +25,20 @@ export function Nav() {
             </Link>
           ))}
         </nav>
-        <Link
-          href="/checkout"
-          className="rounded-pill bg-ember-core px-5 py-2 text-sm font-semibold text-white hover:opacity-90"
-        >
-          Get Started
-        </Link>
+        <div className="flex items-center gap-4">
+          <a
+            href="https://my.gloryhosts.cloud/login"
+            className="text-sm text-hearth-ink hover:text-verdigris-sky"
+          >
+            Sign in
+          </a>
+          <Link
+            href="/checkout"
+            className="rounded-pill bg-ember-core px-5 py-2 text-sm font-semibold text-white hover:opacity-90"
+          >
+            Get Started
+          </Link>
+        </div>
       </div>
     </header>
   );
