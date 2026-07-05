@@ -37,8 +37,41 @@ export class ResellPortalClient {
     throw new Error('TODO-FIXTURE: implement ensureClient once sanitized response fixtures are attached');
   }
 
+  /**
+   * Generic order/activation call. product_key values are supplier-defined
+   * snake_case ids (publicly confirmed so far: "web_hosting", "invoice_ai");
+   * the full vocabulary comes from the authenticated GET /products fixture —
+   * never guessed (CLAUDE.md rule 5). One method covers every catalog line
+   * (hosting, VPN, eSIM, SaaS apps, all 19 AI Business Tools): the key
+   * routes it, `config` carries per-product fields (e.g. cpanel_username,
+   * primary_domain for web_hosting).
+   */
   async createServiceOrder(_opts: { product_key: string; config: Record<string, unknown>; test_mode?: boolean }): Promise<never> {
     throw new Error('TODO-FIXTURE: implement createServiceOrder once sanitized response fixtures are attached');
+  }
+
+  // ── Category-specific endpoint areas (all publicly documented as API
+  //    sections: products, domains, eSIM, SMM). Response shapes are
+  //    fixture-gated; these throw until sanitized fixtures land. ─────────
+
+  /** Domain availability lookup (domains endpoint area). */
+  async checkDomainAvailability(_domain: string): Promise<never> {
+    throw new Error('TODO-FIXTURE: implement checkDomainAvailability once sanitized response fixtures are attached');
+  }
+
+  /** eSIM plan listing (eSIM endpoint area — 4G/5G data, 150+ countries). */
+  async getEsimPlans(): Promise<never> {
+    throw new Error('TODO-FIXTURE: implement getEsimPlans once sanitized response fixtures are attached');
+  }
+
+  /** SMM service listing (SMM endpoint area). */
+  async getSmmServices(): Promise<never> {
+    throw new Error('TODO-FIXTURE: implement getSmmServices once sanitized response fixtures are attached');
+  }
+
+  /** Service status lookup for a provisioned service. */
+  async getServiceStatus(_serviceId: string): Promise<never> {
+    throw new Error('TODO-FIXTURE: implement getServiceStatus once sanitized response fixtures are attached');
   }
 
   /**

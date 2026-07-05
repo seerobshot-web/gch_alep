@@ -142,6 +142,9 @@ importers:
       '@gch/fossbilling-client':
         specifier: workspace:*
         version: link:../../packages/fossbilling-client
+      '@gch/resellerspanel-adapter':
+        specifier: workspace:*
+        version: link:../../packages/resellerspanel-adapter
       next:
         specifier: ^14.2.5
         version: 14.2.35(react-dom@18.3.1)(react@18.3.1)
@@ -151,6 +154,9 @@ importers:
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
+      zod:
+        specifier: ^3.23.2
+        version: 3.25.76
     devDependencies:
       '@types/node':
         specifier: ^20.14.9

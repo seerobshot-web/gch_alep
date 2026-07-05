@@ -80,6 +80,28 @@ the invoice→order_ids linkage, and `updateOrderSupplierServiceId`).
   action), admin-core 3. Rate limiting is in-memory per instance — swap in
   the KV backend (the limiter already accepts one) before multi-region.
 
+## Supplier catalog integration (added 2026-07-05)
+
+- `docs/SUPPLIER_CATALOG.md` — evidence-labeled research snapshot of both
+  suppliers' full catalogs (ResellPortal: ~30 products incl. the 19-tool
+  AI suite; ResellersPanel: cloud/semi-dedicated/VPS/dedicated/domains/
+  WHOIS/SSL lines with published plan tiers).
+- `apps/public-site/app/lib/catalog.ts` — 36-product marketing catalog
+  (supplier keys all null/fixture-gated); rendered by `ProductGrid` on
+  the six category pages; served by `/api/catalog`.
+- ResellersPanel adapter: verified commands `check_avail` +
+  `get_datacenters` added; test switch corrected to `TEST_MODE=1`; all
+  legacy/area wrappers explicitly marked VERIFY-AGAINST-DOCS (the exact
+  command strings must come from cp.resellerspanel.com's API PDF).
+- ResellPortal adapter: catalog-wide surface added (domains/eSIM/SMM/
+  status) as TODO-fixture stubs; `product_key` vocabulary confirmed only
+  for `web_hosting` and `invoice_ai`.
+- New route: `GET /api/domains/check?domain=` (zod + rate limit +
+  verified check_avail; response untyped until demo XML fixture).
+- Visual assets: `docs/IMAGE_SOURCING_GUIDE.md` (10-placement shortlist,
+  duotone recipe, dork strings) + five supplied Pexels clips compressed
+  into `public/images/video/`; home hero plays the worship-hands loop.
+
 ## Open questions
 
 1. FOSSBilling: exact method names/filters flagged VERIFY-AGAINST-INSTALL

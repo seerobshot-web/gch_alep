@@ -53,10 +53,13 @@ export class ResellersPanelClient {
       command,
       api_key: this.apiKey,
       api_secret: this.apiSecret,
+      // Output is XML or PHP serialization only (no JSON) — we parse XML.
       return_type: 'xml',
       ...params
     };
-    if (this.demoMode) finalParams.demo = 1;
+    // Documented test switch is TEST_MODE=1 (demo mode itself is toggled
+    // in Reseller CP → Remote Access; demo accepts any 15-digit card).
+    if (this.demoMode) finalParams.TEST_MODE = 1;
 
     const key = this.cacheKey(command, finalParams);
     const ttl = opts?.ttlSeconds ?? 0;
@@ -78,18 +81,69 @@ export class ResellersPanelClient {
     return parsed;
   }
 
+  // ── VERIFIED command names (public API docs / vendor blog) ──────────
+  // Response shapes remain TODO-fixture until demo-mode XML lands.
+
+  /** Domain availability + current TLD price. Verified command: check_avail */
+  async checkAvail(domain: string) {
+    return this.sendCommand('check_avail', { domain }, { ttlSeconds: 300 });
+  }
+
+  /** Available data centers (needed when placing a hosting order). Verified command: get_datacenters */
+  async getDatacenters(opts?: { ttlSeconds?: number }) {
+    return this.sendCommand('get_datacenters', {}, { ttlSeconds: opts?.ttlSeconds ?? 3600 });
+  }
+
+  // ── UNVERIFIED command names — VERIFY-AGAINST-DOCS ──────────────────
+  // These wrappers cover documented API *areas* (plan listing across all
+  // four server lines, ordering, account status), but the exact command
+  // strings below are placeholders from the original scaffold and were
+  // NOT confirmed against the API PDF
+  // (cp.resellerspanel.com/downloads/ResellersPanelAPI.pdf). Correct each
+  // string from the PDF before any live call — commands are
+  // case-sensitive and wrong names will error.
+
+  /** VERIFY-AGAINST-DOCS: "Get offered plans" (cloud/shared hosting). */
   async listPlans(opts?: { ttlSeconds?: number }) {
     return this.sendCommand('listPlans', {}, { ttlSeconds: opts?.ttlSeconds ?? 300 });
   }
 
-  async checkDomain(domain: string) {
-    return this.sendCommand('checkdomain', { domain }, { ttlSeconds: 300 });
+  /** VERIFY-AGAINST-DOCS: "Get offered Semi-dedicated plans". */
+  async listSemiDedicatedPlans(opts?: { ttlSeconds?: number }) {
+    return this.sendCommand('listSemiDedicatedPlans', {}, { ttlSeconds: opts?.ttlSeconds ?? 300 });
   }
 
+  /** VERIFY-AGAINST-DOCS: "Get offered VPS plans" (KVM line; some OpenVZ setups remain). */
+  async listVpsPlans(opts?: { ttlSeconds?: number }) {
+    return this.sendCommand('listVpsPlans', {}, { ttlSeconds: opts?.ttlSeconds ?? 300 });
+  }
+
+  /** VERIFY-AGAINST-DOCS: "Get offered Dedicated servers". */
+  async listDedicatedServers(opts?: { ttlSeconds?: number }) {
+    return this.sendCommand('listDedicatedServers', {}, { ttlSeconds: opts?.ttlSeconds ?? 300 });
+  }
+
+  /** VERIFY-AGAINST-DOCS: "Get regular domain prices" / "Get TLD info". */
+  async getDomainPrices(opts?: { ttlSeconds?: number }) {
+    return this.sendCommand('getDomainPrices', {}, { ttlSeconds: opts?.ttlSeconds ?? 3600 });
+  }
+
+  /** VERIFY-AGAINST-DOCS: "Get SSL certificates prices". */
+  async getSslPrices(opts?: { ttlSeconds?: number }) {
+    return this.sendCommand('getSslPrices', {}, { ttlSeconds: opts?.ttlSeconds ?? 3600 });
+  }
+
+  /** VERIFY-AGAINST-DOCS: "Submit signup order" (hosting account creation). */
   async createAccount(params: Record<string, unknown>) {
     return this.sendCommand('createAccount', params, { ttlSeconds: 0 });
   }
 
+  /** VERIFY-AGAINST-DOCS: "Submit domain order" (registration/transfer). */
+  async submitDomainOrder(params: Record<string, unknown>) {
+    return this.sendCommand('submitDomainOrder', params, { ttlSeconds: 0 });
+  }
+
+  /** VERIFY-AGAINST-DOCS: account status lookup. */
   async getAccountStatus(account: string) {
     return this.sendCommand('getAccountStatus', { account }, { ttlSeconds: 30 });
   }

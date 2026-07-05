@@ -40,7 +40,7 @@ describe('ResellersPanelClient', () => {
     for (const [k, v] of Object.entries(REQUIRED_ENV)) process.env[k] = v;
   });
 
-  it('sends demo=1 and return_type=xml as form fields in demo mode', async () => {
+  it('sends TEST_MODE=1 and return_type=xml as form fields in demo mode', async () => {
     const fetchSpy = vi.fn().mockResolvedValue({ text: async () => '<result><status>ok</status></result>' });
     vi.stubGlobal('fetch', fetchSpy);
 
@@ -52,8 +52,23 @@ describe('ResellersPanelClient', () => {
     const sentBody = new URLSearchParams(init.body);
     expect(sentBody.get('command')).toBe('listPlans');
     expect(sentBody.get('return_type')).toBe('xml');
-    expect(sentBody.get('demo')).toBe('1');
+    expect(sentBody.get('TEST_MODE')).toBe('1');
     expect(sentBody.get('api_key')).toBe('rp-key');
+
+    vi.unstubAllGlobals();
+  });
+
+  it('verified commands use the documented case-sensitive names', async () => {
+    const fetchSpy = vi.fn().mockResolvedValue({ text: async () => '<result/>' });
+    vi.stubGlobal('fetch', fetchSpy);
+
+    const { ResellersPanelClient } = await import('../src/client');
+    const client = new ResellersPanelClient({ demoMode: true });
+    await client.checkAvail('example.com');
+    await client.getDatacenters();
+
+    const sent = fetchSpy.mock.calls.map(([, init]) => new URLSearchParams(init.body).get('command'));
+    expect(sent).toEqual(['check_avail', 'get_datacenters']);
 
     vi.unstubAllGlobals();
   });
@@ -74,17 +89,17 @@ describe('ResellersPanelClient', () => {
     vi.unstubAllGlobals();
   });
 
-  it('never sends a plaintext command without demo=1 when demoMode is false', async () => {
+  it('omits TEST_MODE when demoMode is false', async () => {
     const fetchSpy = vi.fn().mockResolvedValue({ text: async () => '<result/>' });
     vi.stubGlobal('fetch', fetchSpy);
 
     const { ResellersPanelClient } = await import('../src/client');
     const client = new ResellersPanelClient({ demoMode: false });
-    await client.checkDomain('example.com');
+    await client.checkAvail('example.com');
 
     const [, init] = fetchSpy.mock.calls[0];
     const sentBody = new URLSearchParams(init.body);
-    expect(sentBody.has('demo')).toBe(false);
+    expect(sentBody.has('TEST_MODE')).toBe(false);
 
     vi.unstubAllGlobals();
   });
