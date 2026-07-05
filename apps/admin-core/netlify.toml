@@ -1,0 +1,11 @@
+# Netlify site config — set this site's base directory to apps/admin-core
+# in the Netlify UI; Netlify then reads this file from the base dir.
+[build]
+  command = "cd ../.. && pnpm install --frozen-lockfile && pnpm turbo run build --filter=@gch/admin-core"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

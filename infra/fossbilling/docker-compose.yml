@@ -1,0 +1,27 @@
+# Local FOSSBilling for module development ONLY — production FOSSBilling
+# runs externally on Hostinger and is never vendored into this repo.
+# Image tag is PINNED (never :latest) per CLAUDE.md; bump deliberately
+# after testing against the new release.
+services:
+  fossbilling:
+    image: fossbilling/fossbilling:0.6.16
+    restart: unless-stopped
+    environment:
+      - DB_HOST=db
+      - DB_NAME=fossbilling
+    ports:
+      - '8080:80'
+    volumes:
+      - ./modules:/var/www/html/modules/Resellportal
+    depends_on:
+      - db
+  db:
+    image: mariadb:10.11
+    environment:
+      - MYSQL_ROOT_PASSWORD=changeme
+      - MYSQL_DATABASE=fossbilling
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+  db-data:

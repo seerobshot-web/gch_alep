@@ -1,0 +1,42 @@
+{
+  "name": "@gch/provisioning",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./kv": {
+      "types": "./dist/kv.d.ts",
+      "default": "./dist/kv.js"
+    },
+    "./kv-factory": {
+      "types": "./dist/kv-factory.d.ts",
+      "default": "./dist/kv-factory.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "lint": "eslint src test --ext .ts"
+  },
+  "dependencies": {
+    "@gch/config": "workspace:*",
+    "@upstash/redis": "^1.31.6",
+    "better-sqlite3": "^11.1.2",
+    "pino": "^9.2.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.10",
+    "@types/node": "^20.14.9",
+    "typescript": "^5.5.2",
+    "vitest": "^1.6.0"
+  }
+}
