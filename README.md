@@ -33,7 +33,7 @@ Other commands: `pnpm test` (Vitest) · `pnpm build` · `pnpm lint`
 | `gloryhosts.cloud` | Vercel — apps/public-site |
 | `my.gloryhosts.cloud` | Vercel — apps/client-portal |
 | `ops.gloryhosts.cloud` | Vercel — apps/admin-core (Vercel protection ON; unauth = 404) |
-| `billing.gloryhosts.cloud` | External FOSSBilling on Hostinger |
+| `billing.gloryhosts.cloud` | External FOSSBilling (Docker VPS — see infra/fossbilling/README.md) |
 
 Cookies are scoped per-subdomain, httpOnly, Secure, SameSite=Lax.
 
