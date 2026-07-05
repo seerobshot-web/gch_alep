@@ -1,8 +1,10 @@
-# Netlify site config — set this site's base directory to apps/admin-core
-# in the Netlify UI; Netlify then reads this file from the base dir.
+# Netlify site config — set this site's package directory to apps/admin-core.
+# Netlify's monorepo mode reads this file from the package dir but runs
+# build.command from the REPO ROOT (and installs workspace deps itself),
+# so no cd and no pnpm install here; publish is repo-root-relative.
 [build]
-  command = "cd ../.. && pnpm install --frozen-lockfile && pnpm turbo run build --filter=@gch/admin-core"
-  publish = ".next"
+  command = "pnpm turbo run build --filter=@gch/admin-core"
+  publish = "apps/admin-core/.next"
 
 [build.environment]
   NODE_VERSION = "20"
