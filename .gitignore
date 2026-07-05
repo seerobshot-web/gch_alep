@@ -8,3 +8,4 @@ dev-data/*.sqlite
 .env.local
 *.log
 coverage/
+infra/fossbilling/.env

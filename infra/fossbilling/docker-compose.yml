@@ -1,27 +1,63 @@
-# Local FOSSBilling for module development ONLY — production FOSSBilling
-# runs externally on Hostinger and is never vendored into this repo.
-# Image tag is PINNED (never :latest) per CLAUDE.md; bump deliberately
-# after testing against the new release.
+# FOSSBilling in Docker — production-capable compose for a small VPS
+# (and the same file works locally for fixture capture; see README.md).
+#
+# Production FOSSBilling does NOT have to live on Hostinger shared hosting
+# — CLAUDE.md only requires it to be external to this repo. This stack +
+# Caddy gives billing.gloryhosts.cloud with auto-TLS on any Docker host.
+#
+# Image tag is PINNED (never :latest); bump deliberately after testing.
+# Secrets come from infra/fossbilling/.env (copy .env.example, never commit).
 services:
+  caddy:
+    image: caddy:2.8-alpine
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+    environment:
+      # Set BILLING_DOMAIN=billing.gloryhosts.cloud in .env for production
+      # TLS; leave as localhost for local fixture capture (plain HTTP).
+      - BILLING_DOMAIN=${BILLING_DOMAIN:-localhost}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - fossbilling
+
   fossbilling:
     image: fossbilling/fossbilling:0.6.16
     restart: unless-stopped
     environment:
       - DB_HOST=db
-      - DB_NAME=fossbilling
-    ports:
-      - '8080:80'
+      - DB_NAME=${MYSQL_DATABASE:-fossbilling}
+      - DB_USER=${MYSQL_USER:-fossbilling}
+      - DB_PASS=${MYSQL_PASSWORD:?set MYSQL_PASSWORD in infra/fossbilling/.env}
     volumes:
+      - fossbilling-data:/var/www/html
       - ./modules:/var/www/html/modules/Resellportal
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+
   db:
     image: mariadb:10.11
+    restart: unless-stopped
     environment:
-      - MYSQL_ROOT_PASSWORD=changeme
-      - MYSQL_DATABASE=fossbilling
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:?set MYSQL_ROOT_PASSWORD in infra/fossbilling/.env}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-fossbilling}
+      - MYSQL_USER=${MYSQL_USER:-fossbilling}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:?set MYSQL_PASSWORD in infra/fossbilling/.env}
+    healthcheck:
+      test: ['CMD', 'healthcheck.sh', '--connect', '--innodb_initialized']
+      interval: 10s
+      timeout: 5s
+      retries: 6
     volumes:
       - db-data:/var/lib/mysql
 
 volumes:
+  fossbilling-data:
   db-data:
+  caddy-data:
+  caddy-config:

@@ -1,8 +1,10 @@
-# Netlify site config — set this site's base directory to apps/public-site
-# in the Netlify UI; Netlify then reads this file from the base dir.
+# Netlify site config — set this site's package directory to apps/public-site.
+# Netlify's monorepo mode reads this file from the package dir but runs
+# build.command from the REPO ROOT (and installs workspace deps itself),
+# so no cd and no pnpm install here; publish is repo-root-relative.
 [build]
-  command = "cd ../.. && pnpm install --frozen-lockfile && pnpm turbo run build --filter=@gch/public-site"
-  publish = ".next"
+  command = "pnpm turbo run build --filter=@gch/public-site"
+  publish = "apps/public-site/.next"
 
 [build.environment]
   NODE_VERSION = "20"
