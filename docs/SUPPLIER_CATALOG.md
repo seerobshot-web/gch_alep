@@ -19,6 +19,30 @@ key list requires the authenticated `GET /products` fixture.
 Documented endpoint areas: clients · orders · provisioning · balance ·
 products · domains · eSIM · SMM.
 
+### FIRST-PARTY VERIFIED endpoint list (panel API Access page, 2026-07-05)
+
+Auth: `X-API-Key` + `X-API-Secret` request headers. Global flags:
+`test_mode: true` (body, or `X-RP-Test-Mode: 1` header) → mock response
+with `test_svc_*`/`test_cli_*` ids + `would_charge`, no wallet touch —
+works on POST /orders, POST /clients, DELETE /clients/{id}, DELETE
+/services/{id}; `skip_client_email: true` on order requests suppresses
+the supplier welcome email (response still returns `vpn_credentials`,
+`client_credentials`, `bio`, …).
+
+| Method + path | Purpose |
+| --- | --- |
+| GET /balance | wallet balance |
+| GET /products | available products (authoritative product_key list) |
+| GET /clients · GET /clients/{id} · POST /clients · DELETE /clients/{id} | client CRUD |
+| GET /services · GET /services/{id} · DELETE /services/{id} | services (DELETE is the irreversible one — rule 4) |
+| GET /orders (filterable) · POST /orders | orders/subscriptions |
+| GET /esim-packages | eSIM packages |
+| GET /smm-services | SMM services |
+| GET /vpn/servers (82+) · GET /vpn/ports · GET /vpn/config | VPN provisioning surface |
+
+No `/domains` endpoint appears in the panel docs despite the earlier
+index evidence — treat domain reselling via ResellPortal as unconfirmed.
+
 ### Product lines (~30 products; "+19 AI tools")
 
 | Line | Notes |
