@@ -195,6 +195,23 @@ Hand-pick backups: [@everythingcaptured](https://unsplash.com/@everythingcapture
 | B | [unsplash.com/photos/a-group-of-seniors-holding-hands-and-praying-for-ukraine-together-in-church-community-center-0a6pF-saQN0](https://unsplash.com/photos/a-group-of-seniors-holding-hands-and-praying-for-ukraine-together-in-church-community-center-0a6pF-saQN0) | (confirm on page) | Seniors in a prayer circle — horizontal group composition |
 | search | [unsplash.com/s/photos/group-prayer](https://unsplash.com/s/photos/group-prayer) · [people-praying-together](https://unsplash.com/s/photos/people-praying-together) | — | 900–2.4k results if neither lands |
 
+## Downloaded + processed video loops (in repo)
+
+Five Pexels clips were supplied, compressed to web loops (H.264, CRF 30,
+muted, faststart) in `apps/public-site/public/images/video/`:
+
+| File | Source (Pexels ID) | Frame | Duration | Use |
+| --- | --- | --- | --- | --- |
+| `worship-hands-16x9-pexels19087723.mp4` (1.4 MB, 1080p30) | 19087723 | Clasped hands raised in a worship crowd, cool stage light | 10 s | **Home hero** (wired via `HeroMedia`; ember gradient corrects the cool cast) |
+| `priest-light-16x9-pexels9589518.mp4` (698 KB, 1080p) | 9589518 | Priest gazing upward in dramatic directional church light | 12 s (trimmed from 20.5 s) | About mission hero |
+| `scripture-reading-9x16-pexels8483598.mp4` (223 KB, 720×1280) | 8483598 | Man reading Scripture, warm chapel, cross + candle | 10.7 s | Mobile hero / vertical teaser — warmest clip of the set |
+| `congregation-pews-9x16-pexels5875578.mp4` (407 KB, 720×1280) | 5875578 | Congregation in pews under stained-glass windows | 9.8 s | Mobile hero alternate |
+| `worship-praise-9x16-pexels19087771.mp4` (1.2 MB, 720×1280) | 19087771 | Man singing, arms raised, blue concert light | 4.4 s | Short vertical teaser — heavy blue cast, needs ember tint; too short for a calm hero loop |
+
+Poster frames: `images/hero/home-hero-poster.jpg`, `images/hero/about-hero-poster.jpg`.
+Originals (UHD masters, 80 MB) are NOT committed — keep them in your local
+asset archive; recompress from masters, never from these web copies.
+
 ## Sourcing checklist
 
 - [ ] Every asset downloaded from its own Unsplash/Pexels page (license

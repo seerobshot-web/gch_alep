@@ -1,23 +1,30 @@
 import Link from 'next/link';
-import { PageHero } from './components/PageHero';
+import { HeroMedia } from './components/HeroMedia';
 
 export default function HomePage() {
   return (
     <>
-      <PageHero
-        eyebrow="Glory Cloud Host"
-        title="Hosting built by believers, for anyone building something that matters."
-        description="From your first website to a full VPS fleet, we pair dependable infrastructure with a team that treats your calling as seriously as you do."
+      <HeroMedia
+        videoSrc="/images/video/worship-hands-16x9-pexels19087723.mp4"
+        posterSrc="/images/hero/home-hero-poster.jpg"
       >
-        <div className="mt-8 flex justify-center gap-4">
-          <Link href="/pricing" className="rounded-pill bg-ember-core px-6 py-3 font-semibold text-white hover:opacity-90">
+        <p className="mb-3 font-body text-sm font-semibold uppercase tracking-wide text-white/90">Glory Cloud Host</p>
+        <h1 className="mb-4 max-w-2xl font-display text-4xl font-bold">
+          Hosting built by believers, for anyone building something that matters.
+        </h1>
+        <p className="max-w-xl text-lg text-white/85">
+          From your first website to a full VPS fleet, we pair dependable infrastructure with a team that treats your
+          calling as seriously as you do.
+        </p>
+        <div className="mt-8 flex gap-4">
+          <Link href="/pricing" className="rounded-pill bg-white px-6 py-3 font-semibold text-ember-core hover:opacity-90">
             See Plans
           </Link>
-          <Link href="/migration" className="rounded-pill border border-border-interactive px-6 py-3 font-semibold text-hearth-ink hover:bg-ash-stone/20">
+          <Link href="/migration" className="rounded-pill border border-white/60 px-6 py-3 font-semibold text-white hover:bg-white/10">
             Migrate for Free
           </Link>
         </div>
-      </PageHero>
+      </HeroMedia>
       <section className="mx-auto grid max-w-6xl grid-cols-1 gap-6 px-6 pb-20 sm:grid-cols-2 lg:grid-cols-3">
         {[
           { href: '/hosting', title: 'Web Hosting', copy: 'Shared cPanel hosting for churches, ministries, and small businesses.' },
