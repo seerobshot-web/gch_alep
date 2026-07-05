@@ -23,12 +23,23 @@ export function middleware(req: NextRequest) {
   if (!allowedHost(req.nextUrl.hostname)) {
     return new NextResponse('Not Found', { status: 404 });
   }
+  // CSP needs the billing origin, but a missing env set (e.g. a deploy
+  // preview before variables are configured) must not 500 every page —
+  // fall back to a stricter self-only CSP instead of crashing.
+  let billingOrigin = '';
+  try {
+    billingOrigin = env.FOSSBILLING_URL;
+  } catch {
+    // env unset — marketing pages still render; API routes will surface
+    // their own env errors when actually called
+  }
+
   const res = NextResponse.next();
   res.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
   res.headers.set('X-Content-Type-Options', 'nosniff');
   res.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.headers.set('X-Frame-Options', 'DENY');
-  res.headers.set('Content-Security-Policy', `default-src 'self' ${env.FOSSBILLING_URL}`);
+  res.headers.set('Content-Security-Policy', `default-src 'self'${billingOrigin ? ` ${billingOrigin}` : ''}`);
   return res;
 }
 
