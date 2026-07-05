@@ -55,6 +55,33 @@ Vercel env. Without them the poller falls back to SQLite, which does NOT
 survive between serverless invocations — idempotency markers would be lost
 and orders could double-provision. The fallback logs a loud warning.
 
+## Deploying on Netlify (alternative to Vercel)
+
+Create **three Netlify sites from this one repo**, setting each site's
+*base directory* to its app folder — each app carries its own
+`netlify.toml` (build command, Next.js runtime plugin, Node 20):
+
+| Site | Base directory | Custom domain |
+| --- | --- | --- |
+| public-site | `apps/public-site` | `gloryhosts.cloud` |
+| client-portal | `apps/client-portal` | `my.gloryhosts.cloud` |
+| admin-core | `apps/admin-core` | `ops.gloryhosts.cloud` |
+
+- **Cron:** Vercel's `vercel.json` cron is replaced by the Netlify
+  Scheduled Function `apps/admin-core/netlify/functions/poll-invoices-cron.mjs`
+  (same 15-min cadence, same `Authorization: Bearer CRON_SECRET` contract).
+- **Env vars:** set the full `.env.example` set per site. `KV_URL` +
+  `KV_TOKEN` (Upstash REST) are REQUIRED in production either way.
+- **ops protection:** enable Netlify password protection (or equivalent)
+  on the admin-core site — previews and the `.netlify.app` subdomain are
+  reachable by design so branch previews render; the platform gate is the
+  access control, the middleware host-check is defense in depth.
+
+**Hostinger DNS (Netlify targets):** apex `gloryhosts.cloud` → A
+`75.2.60.5` (Netlify LB); `my` + `ops` → CNAME to each site's
+`<name>.netlify.app`; `billing` → unchanged A record to the Hostinger
+FOSSBilling server. Netlify issues Let's Encrypt certs automatically.
+
 ## Ground rules (enforced)
 
 - `process.env` is read **only** in `packages/config/src/env.ts` — enforced by

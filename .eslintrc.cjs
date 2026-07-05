@@ -39,6 +39,13 @@ module.exports = {
       // Tests may stub process.env to exercise the env loader itself
       files: ['**/test/**/*.ts', '**/*.test.ts'],
       rules: { 'no-restricted-syntax': 'off' }
+    },
+    {
+      // Netlify scheduled functions are platform glue outside the Next
+      // apps (own runtime, no workspace bundling guarantees) — they read
+      // only URL/CRON_SECRET, mirroring env.ts's own exemption
+      files: ['apps/*/netlify/functions/**'],
+      rules: { 'no-restricted-syntax': 'off' }
     }
   ]
 };

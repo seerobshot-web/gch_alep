@@ -6,9 +6,21 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+// Deploy-preview hosts are allowed so branch previews render — but ops is
+// the sensitive app: keep platform-level access control (Vercel
+// Protection / Netlify password) enabled on BOTH previews and the
+// platform subdomain, so the host check is never the only gate.
+function allowedHost(hostname: string): boolean {
+  return (
+    hostname.endsWith('ops.gloryhosts.cloud') ||
+    hostname === 'localhost' ||
+    hostname.endsWith('.netlify.app') ||
+    hostname.endsWith('.vercel.app')
+  );
+}
+
 export function middleware(req: NextRequest) {
-  const hostname = req.nextUrl.hostname;
-  if (!hostname.endsWith('ops.gloryhosts.cloud') && hostname !== 'localhost') {
+  if (!allowedHost(req.nextUrl.hostname)) {
     return new NextResponse('Not Found', { status: 404 });
   }
   const res = NextResponse.next();

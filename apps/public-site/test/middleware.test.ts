@@ -33,4 +33,10 @@ describe('public-site middleware (bug #1 regression: app-root placement)', () =>
     expect(res.headers.get('x-frame-options')).toBe('DENY');
     expect(res.headers.get('content-security-policy')).toContain('billing.example.com');
   });
+
+  it('allows Netlify/Vercel deploy-preview hosts', async () => {
+    const { middleware } = await import('../middleware');
+    expect(middleware(new NextRequest('https://deploy-preview-1--gch.netlify.app/')).status).toBe(200);
+    expect(middleware(new NextRequest('https://gch-git-branch.vercel.app/')).status).toBe(200);
+  });
 });

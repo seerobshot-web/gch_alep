@@ -4,9 +4,19 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+// Deploy-preview hosts (Netlify/Vercel) are allowed through the host
+// check so branch previews render; production binds to my.gloryhosts.cloud.
+function allowedHost(hostname: string): boolean {
+  return (
+    hostname.endsWith('my.gloryhosts.cloud') ||
+    hostname === 'localhost' ||
+    hostname.endsWith('.netlify.app') ||
+    hostname.endsWith('.vercel.app')
+  );
+}
+
 export function middleware(req: NextRequest) {
-  const hostname = req.nextUrl.hostname;
-  if (!hostname.endsWith('my.gloryhosts.cloud') && hostname !== 'localhost') {
+  if (!allowedHost(req.nextUrl.hostname)) {
     return new NextResponse('Not Found', { status: 404 });
   }
   const res = NextResponse.next();
