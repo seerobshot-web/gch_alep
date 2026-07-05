@@ -1,0 +1,11 @@
+# Caddy reverse proxy for FOSSBilling.
+# BILLING_DOMAIN=localhost      -> plain HTTP on :80 (local fixture capture)
+# BILLING_DOMAIN=billing.gloryhosts.cloud -> automatic Let's Encrypt TLS
+{$BILLING_DOMAIN} {
+	reverse_proxy fossbilling:80
+	encode gzip
+	header {
+		Strict-Transport-Security "max-age=63072000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+	}
+}
